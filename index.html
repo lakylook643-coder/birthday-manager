@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מנהל ימי הולדת</title>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dark: #8a6f2e;
+      --deep: #0d0d1a;
+      --surface: #13132a;
+      --surface2: #1a1a35;
+      --surface3: #22224a;
+      --text: #f0ead6;
+      --text-muted: #9990b8;
+      --success: #4caf82;
+      --error: #e05555;
+      --border: rgba(201,168,76,0.2);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: var(--deep);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(201,168,76,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 60%, rgba(201,168,76,0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 15%, rgba(201,168,76,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 75%, rgba(201,168,76,0.2) 0%, transparent 100%),
+        radial-gradient(600px at 0% 0%, rgba(124,108,191,0.08) 0%, transparent 60%),
+        radial-gradient(400px at 100% 100%, rgba(201,168,76,0.05) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; position: relative; z-index: 1; }
+    header { text-align: center; padding: 3rem 0 2.5rem; }
+    .header-ornament { font-size: 1.5rem; color: var(--gold); display: block; margin-bottom: 0.5rem; letter-spacing: 0.5rem; opacity: 0.7; }
+    header h1 { font-family: 'Frank Ruhl Libre', serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; color: var(--gold-light); text-shadow: 0 0 40px rgba(201,168,76,0.3); margin-bottom: 0.5rem; }
+    header p { color: var(--text-muted); font-size: 0.95rem; font-weight: 300; }
+    .divider { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 1.5rem auto; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; }
+    .card-title { font-family: 'Frank Ruhl Libre', serif; font-size: 1.3rem; color: var(--gold-light); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    #auth-section { text-align: center; }
+    #auth-section p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
+    #auth-user { display: none; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.75rem; border: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: all 0.25s ease; }
+    .btn-primary { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--deep); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
+    .btn-secondary { background: var(--surface3); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold-light); }
+    .btn-danger { background: rgba(224,85,85,0.15); color: var(--error); border: 1px solid rgba(224,85,85,0.3); }
+    .btn-danger:hover { background: rgba(224,85,85,0.25); }
+    .btn-success { background: rgba(76,175,130,0.15); color: var(--success); border: 1px solid rgba(76,175,130,0.3); }
+    .btn-success:hover { background: rgba(76,175,130,0.25); }
+    .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.82rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+    input[type="text"], input[type="date"] { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem; color: var(--text); font-family: 'Heebo', sans-serif; font-size: 0.95rem; transition: border-color 0.2s; width: 100%; }
+    input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.1); }
+    input::placeholder { color: var(--text-muted); opacity: 0.5; }
+    .hebrew-date-preview { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem; color: var(--gold-light); font-family: 'Frank Ruhl Libre', serif; font-size: 1rem; min-height: 2.6rem; display: flex; align-items: center; }
+    .form-actions { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; }
+    .message { padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.9rem; margin-top: 1rem; display: none; }
+    .message.success { background: rgba(76,175,130,0.15); border: 1px solid rgba(76,175,130,0.3); color: var(--success); display: block; }
+    .message.error { background: rgba(224,85,85,0.15); border: 1px solid rgba(224,85,85,0.3); color: var(--error); display: block; }
+    .card-title-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+    .sync-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
+    .dot.ok { background: var(--success); box-shadow: 0 0 6px var(--success); }
+    .dot.err { background: var(--error); }
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: var(--surface3); color: var(--gold-light); font-weight: 500; padding: 0.8rem 1rem; text-align: right; font-family: 'Frank Ruhl Libre', serif; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(201,168,76,0.08); vertical-align: middle; }
+    tr:hover td { background: rgba(201,168,76,0.04); }
+    .age-badge { display: inline-block; background: rgba(201,168,76,0.15); color: var(--gold-light); border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 0.15rem 0.6rem; font-size: 0.8rem; font-weight: 500; }
+    .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; max-width: 460px; width: 100%; }
+    .modal h3 { font-family: 'Frank Ruhl Libre', serif; color: var(--gold-light); margin-bottom: 1rem; }
+    .modal p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
+    .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; }
+    .spinner { width: 16px; height: 16px; border: 2px solid rgba(201,168,76,0.3); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+      th, td { padding: 0.6rem 0.6rem; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <span class="header-ornament">✦ ✦ ✦</span>
+    <h1>מנהל ימי הולדת</h1>
+    <p>עברי ולועזי — מסונכרן ליומן Google</p>
+    <div class="divider"></div>
+  </header>
+
+  <!-- Google Auth -->
+  <div id="auth-section" class="card">
+    <p id="auth-status-text">יש להתחבר לחשבון Google כדי לסנכרן עם יומן Google Calendar.</p>
+    <div id="auth-buttons">
+      <button class="btn btn-primary" onclick="handleAuth()">🔗 התחבר לחשבון Google</button>
+    </div>
+    <div id="auth-user">
+      <div class="sync-status">
+        <span class="dot ok"></span>
+        <span id="auth-user-name"></span>
+      </div>
+      <button class="btn btn-secondary" onclick="handleSignOut()" style="margin-top:0.75rem;">התנתק</button>
+    </div>
+  </div>
+
+  <!-- Add Birthday Form -->
+  <div class="card">
+    <div class="card-title">✨ הוספת יום הולדת חדש</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="firstName">שם פרטי</label>
+        <input type="text" id="firstName" placeholder="ישראל" />
+      </div>
+      <div class="form-group">
+        <label for="lastName">שם משפחה</label>
+        <input type="text" id="lastName" placeholder="ישראלי" />
+      </div>
+      <div class="form-group full">
+        <label for="birthDate">תאריך לידה לועזי</label>
+        <input type="date" id="birthDate" onchange="updateHebrewPreview()" />
+      </div>
+      <div class="form-group full">
+        <label>תאריך עברי מחושב</label>
+        <div class="hebrew-date-preview" id="hebrewPreview">— הזן תאריך לועזי —</div>
+      </div>
+    </div>
+    <div id="form-message" class="message"></div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="clearForm()">נקה</button>
+      <button class="btn btn-primary" onclick="addBirthday()">➕ הוסף</button>
+    </div>
+  </div>
+
+  <!-- Birthday List -->
+  <div class="card">
+    <div class="card-title-row">
+      <span class="card-title" style="margin-bottom:0;">📋 רשימת ימי הולדת</span>
+      <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+        <div class="sync-status">
+          <span class="dot" id="cal-dot"></span>
+          <span id="cal-status-text">לא מסונכרן</span>
+        </div>
+        <button class="btn btn-success" onclick="syncAllToCalendar()" id="sync-btn">🔄 סנכרן ליומן</button>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>שם מלא</th>
+            <th>תאריך לידה לועזי</th>
+            <th>גיל לועזי</th>
+            <th>תאריך עברי (מקורי)</th>
+            <th>גיל עברי</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody id="birthday-list">
+          <tr><td colspan="6">
+            <div class="empty-state">
+              <div class="icon">🎂</div>
+              <div>טרם נוספו ימי הולדת</div>
+            </div>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="delete-modal" style="display:none;">
+  <div class="modal">
+    <h3>מחיקת יום הולדת</h3>
+    <p id="delete-modal-text">האם אתה בטוח שברצונך למחוק את יום ההולדת? הפעולה תמחק גם את האירועים ביומן Google.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeDeleteModal()">ביטול</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">מחק</button>
+    </div>
+  </div>
+</div>
+
+<script src="hebcal.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
