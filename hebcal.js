@@ -102,7 +102,7 @@ const HebCal = (() => {
 
   // Gregorian date → absolute day number
   function gregToAbs(y, m, d) {
-    let abs = d - 1;
+    let abs = d;
     for (let i = 1; i < m; i++) abs += daysInGregorianMonth(i, y);
     return (abs + 365 * (y - 1) + Math.floor((y - 1) / 4)
             - Math.floor((y - 1) / 100) + Math.floor((y - 1) / 400));
@@ -138,7 +138,7 @@ const HebCal = (() => {
       const dim = daysInMonth(m, y);
       const startAbs = hebToAbs(y, m, 1);
       if (abs < startAbs + dim) {
-        return { year: y, month: m, day: abs - startAbs + 1, isLeap: isLeapYear(y) };
+        return { year: y, month: m, day: abs - startAbs, isLeap: isLeapYear(y) };
       }
       m = (m === months) ? 1 : m + 1;
     }
