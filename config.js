@@ -1,5 +1,5 @@
 window.APP_CONFIG = {
-  clientId: '280840624923-n2c8v7238m9a99j2uupe0652ccio71a5.apps.googleusercontent.com',
+  clientId: '323240721703-2hkghanqu0bfsuqlvop9s4hbd0fmk765.apps.googleusercontent.com',
   githubOwner: 'lakylook643-coder',
   githubRepo: 'birthday-manager'
 };
