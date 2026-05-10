@@ -300,11 +300,17 @@ async function syncBirthdayYear(b, year) {
   b.calendarEventIds[year] = { gregorianId: gId, hebrewId: hId };
 }
 
+function getNextDay(dateStr) {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + 1);
+  return d.toISOString().split('T')[0];
+}
+
 async function createCalendarEvent(title, dateStr) {
   const body = {
     summary: title,
     start: { date: dateStr },
-    end:   { date: dateStr },
+    end: { date: getNextDay(dateStr) },
     colorId: '7',
     reminders: { useDefault: false }
   };
