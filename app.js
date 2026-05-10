@@ -16,13 +16,50 @@ window.addEventListener('load', () => {
 });
 
 // ── Data: localStorage ─────────────────────────────────────────────────────
-function loadData() {
-  const raw = localStorage.getItem('birthdays');
-  birthdays = raw ? JSON.parse(raw) : [];
+const GITHUB_TOKEN = window.APP_CONFIG?.githubToken || '';
+const GITHUB_OWNER = 'lakylook643-coder';
+const GITHUB_REPO = 'birthday-manager';
+const DATA_FILE = 'data/birthdays.json';
+
+async function loadData() {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
+      { headers: { Authorization: `token ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (res.status === 404) { birthdays = []; return; }
+    const json = await res.json();
+    birthdays = JSON.parse(atob(json.content.replace(/\n/g, '')));
+  } catch (e) {
+    console.error('Load error:', e);
+    const raw = localStorage.getItem('birthdays');
+    birthdays = raw ? JSON.parse(raw) : [];
+  }
 }
 
-function saveData() {
-  localStorage.setItem('birthdays', JSON.stringify(birthdays));
+async function saveData() {
+  try {
+    await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/dispatches`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          event_type: 'save-data',
+          client_payload: { data: JSON.stringify(birthdays) }
+        })
+      }
+    );
+    // גיבוי ב-localStorage
+    localStorage.setItem('birthdays', JSON.stringify(birthdays));
+  } catch (e) {
+    console.error('Save error:', e);
+    localStorage.setItem('birthdays', JSON.stringify(birthdays));
+  }
 }
 
 // ── Google Auth ────────────────────────────────────────────────────────────
