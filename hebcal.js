@@ -138,7 +138,7 @@ const HebCal = (() => {
       const dim = daysInMonth(m, y);
       const startAbs = hebToAbs(y, m, 1);
       if (abs < startAbs + dim) {
-        return { year: y, month: m, day: abs - startAbs, isLeap: isLeapYear(y) };
+        return { year: y, month: m, day: abs - startAbs + 1, isLeap: isLeapYear(y) };
       }
       m = (m === months) ? 1 : m + 1;
     }
