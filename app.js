@@ -64,14 +64,6 @@ async function saveData() {
   }
 }
 
-    // גיבוי ב-localStorage
-    localStorage.setItem('birthdays', JSON.stringify(birthdays));
-  } catch (e) {
-    console.error('Save error:', e);
-    localStorage.setItem('birthdays', JSON.stringify(birthdays));
-  }
-}
-
 // ── Google Auth ────────────────────────────────────────────────────────────
 function initGoogleAuth() {
   if (!CLIENT_ID) return;
