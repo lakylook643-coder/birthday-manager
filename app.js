@@ -98,6 +98,7 @@ function handleAuth() {
 function onTokenReceived(resp) {
   if (resp.error) return;
   accessToken = resp.access_token;
+  loadData().then(() => renderTable());
   fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
     headers: { Authorization: `Bearer ${accessToken}` }
   })
