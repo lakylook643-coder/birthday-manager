@@ -305,8 +305,7 @@ async function createCalendarEvent(title, dateStr) {
     summary: title,
     start: { date: dateStr },
     end:   { date: dateStr },
-    colorId: '11',
-    reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 480 }] }
+    reminders: { useDefault: false }
   };
   try {
     const res = await fetch(
