@@ -105,7 +105,7 @@ const HebCal = (() => {
     let abs = d;
     for (let i = 1; i < m; i++) abs += daysInGregorianMonth(i, y);
     return (abs + 365 * (y - 1) + Math.floor((y - 1) / 4)
-            - Math.floor((y - 1) / 100) + Math.floor((y - 1) / 400));
+            - Math.floor((y - 1) / 100) + Math.floor((y - 1) / 400) + 1);
   }
 
   function isGregorianLeap(y) {
