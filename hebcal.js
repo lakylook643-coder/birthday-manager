@@ -89,7 +89,7 @@ const HebCal = (() => {
 
   // Hebrew date → absolute day number (days since some epoch)
   function hebToAbs(y, m, d) {
-    let abs = d + elapsedDays(y) - 1373429; // offset to align with Gregorian epoch
+    let abs = d + elapsedDays(y) - 1373428; // offset to align with Gregorian epoch
     // Add months before m
     if (m < 7) {
       for (let i = 7; i <= monthsInYear(y); i++) abs += daysInMonth(i, y);
