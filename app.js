@@ -2,7 +2,7 @@
 const CLIENT_ID = window.APP_CONFIG?.clientId || '';
 const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/spreadsheets';
 const SHEET_ID = '1qhAlOrbRUbI5EyoX165oGuSpeOV6RCcVZYHbDzZai5w';
-const SHEET_NAME = 'Sheet1';
+const SHEET_NAME = 'גיליון1';
 
 // ── State ──────────────────────────────────────────────────────────────────
 let birthdays = [];
