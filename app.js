@@ -43,7 +43,6 @@ async function saveData() {
       {
         method: 'POST',
         headers: {
-          Authorization: `token ${GITHUB_TOKEN}`,
           Accept: 'application/vnd.github.v3+json',
           'Content-Type': 'application/json'
         },
