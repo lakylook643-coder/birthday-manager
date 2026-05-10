@@ -311,7 +311,7 @@ async function createCalendarEvent(title, dateStr) {
     summary: title,
     start: { date: dateStr },
     end: { date: getNextDay(dateStr) },
-    colorId: '7',
+    colorId: '4',
     reminders: { useDefault: false }
   };
   try {
