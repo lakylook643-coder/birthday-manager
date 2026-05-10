@@ -1,6 +1,8 @@
 // ── Configuration ─────────────────────────────────────────────────────────
 const CLIENT_ID = window.APP_CONFIG?.clientId || '';
-const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email';
+const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/spreadsheets';
+const SHEET_ID = '1qhAlOrbRUbI5EyoX165oGuSpeOV6RCcVZYHbDzZai5w';
+const SHEET_NAME = 'Sheet1';
 
 // ── State ──────────────────────────────────────────────────────────────────
 let birthdays = [];
@@ -16,19 +18,21 @@ window.addEventListener('load', () => {
 });
 
 // ── Data: localStorage ─────────────────────────────────────────────────────
-const GITHUB_OWNER = 'lakylook643-coder';
-const GITHUB_REPO = 'birthday-manager';
-const DATA_FILE = 'data/birthdays.json';
-
 async function loadData() {
+  if (!accessToken) {
+    const raw = localStorage.getItem('birthdays');
+    birthdays = raw ? JSON.parse(raw) : [];
+    return;
+  }
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
-      { headers: { Accept: 'application/vnd.github.v3+json' } }
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A1`,
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     );
-    if (res.status === 404) { birthdays = []; return; }
     const json = await res.json();
-    birthdays = JSON.parse(atob(json.content.replace(/\n/g, '')));
+    const val = json.values?.[0]?.[0];
+    birthdays = val ? JSON.parse(val) : [];
+    localStorage.setItem('birthdays', JSON.stringify(birthdays));
   } catch (e) {
     console.error('Load error:', e);
     const raw = localStorage.getItem('birthdays');
@@ -37,21 +41,29 @@ async function loadData() {
 }
 
 async function saveData() {
+  localStorage.setItem('birthdays', JSON.stringify(birthdays));
+  if (!accessToken) return;
   try {
     await fetch(
-      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/dispatches`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A1?valueInputOption=RAW`,
       {
-        method: 'POST',
+        method: 'PUT',
         headers: {
-          Accept: 'application/vnd.github.v3+json',
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          event_type: 'save-data',
-          client_payload: { data: JSON.stringify(birthdays) }
+          range: `${SHEET_NAME}!A1`,
+          majorDimension: 'ROWS',
+          values: [[JSON.stringify(birthdays)]]
         })
       }
     );
+  } catch (e) {
+    console.error('Save error:', e);
+  }
+}
+
     // גיבוי ב-localStorage
     localStorage.setItem('birthdays', JSON.stringify(birthdays));
   } catch (e) {
