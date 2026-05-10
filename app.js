@@ -305,6 +305,7 @@ async function createCalendarEvent(title, dateStr) {
     summary: title,
     start: { date: dateStr },
     end:   { date: dateStr },
+    colorId: '7',
     reminders: { useDefault: false }
   };
   try {
