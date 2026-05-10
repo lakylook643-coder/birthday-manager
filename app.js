@@ -1,6 +1,6 @@
 // ── Configuration ─────────────────────────────────────────────────────────
 const CLIENT_ID = window.APP_CONFIG?.clientId || '';
-const SCOPES = 'https://www.googleapis.com/auth/calendar';
+const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email';
 
 // ── State ──────────────────────────────────────────────────────────────────
 let birthdays = [];
