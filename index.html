@@ -3,100 +3,411 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>מנהל ימי הולדת</title>
-  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <title>ניהול ימי הולדת חכם</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@300;400;600;700;900&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --gold: #c9a84c;
-      --gold-light: #e8c97a;
-      --gold-dark: #8a6f2e;
-      --deep: #0d0d1a;
-      --surface: #13132a;
-      --surface2: #1a1a35;
-      --surface3: #22224a;
-      --text: #f0ead6;
-      --text-muted: #9990b8;
-      --success: #4caf82;
-      --error: #e05555;
-      --border: rgba(201,168,76,0.2);
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #18181f;
+      --surface3: #202028;
+      --border: rgba(255,255,255,0.07);
+      --text: #f0f0f5;
+      --text-muted: #7070a0;
+      --purple: #8b5cf6;
+      --purple-light: #a78bfa;
+      --purple-dark: #6d28d9;
+      --pink: #ec4899;
+      --teal: #14b8a6;
+      --success: #10b981;
+      --error: #f43f5e;
+      --gold: #fbbf24;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: 'Heebo', sans-serif;
-      background: var(--deep);
+      background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
     }
+
+    /* Animated gradient background */
     body::before {
       content: '';
       position: fixed; inset: 0;
-      background-image:
-        radial-gradient(1px 1px at 10% 20%, rgba(201,168,76,0.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 30% 60%, rgba(201,168,76,0.2) 0%, transparent 100%),
-        radial-gradient(1px 1px at 70% 15%, rgba(201,168,76,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 85% 75%, rgba(201,168,76,0.2) 0%, transparent 100%),
-        radial-gradient(600px at 0% 0%, rgba(124,108,191,0.08) 0%, transparent 60%),
-        radial-gradient(400px at 100% 100%, rgba(201,168,76,0.05) 0%, transparent 60%);
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(139,92,246,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(236,72,153,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 50% 50%, rgba(20,184,166,0.05) 0%, transparent 70%);
       pointer-events: none; z-index: 0;
     }
-    .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; position: relative; z-index: 1; }
-    header { text-align: center; padding: 3rem 0 2.5rem; }
-    .header-ornament { font-size: 1.5rem; color: var(--gold); display: block; margin-bottom: 0.5rem; letter-spacing: 0.5rem; opacity: 0.7; }
-    header h1 { font-family: 'Frank Ruhl Libre', serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; color: var(--gold-light); text-shadow: 0 0 40px rgba(201,168,76,0.3); margin-bottom: 0.5rem; }
-    header p { color: var(--text-muted); font-size: 0.95rem; font-weight: 300; }
-    .divider { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 1.5rem auto; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; }
-    .card-title { font-family: 'Frank Ruhl Libre', serif; font-size: 1.3rem; color: var(--gold-light); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
-    #auth-section { text-align: center; }
-    #auth-section p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
-    #auth-user { display: none; }
-    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.75rem; border: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: all 0.25s ease; }
-    .btn-primary { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--deep); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
-    .btn-secondary { background: var(--surface3); color: var(--text); border: 1px solid var(--border); }
-    .btn-secondary:hover { border-color: var(--gold); color: var(--gold-light); }
-    .btn-danger { background: rgba(224,85,85,0.15); color: var(--error); border: 1px solid rgba(224,85,85,0.3); }
-    .btn-danger:hover { background: rgba(224,85,85,0.25); }
-    .btn-success { background: rgba(76,175,130,0.15); color: var(--success); border: 1px solid rgba(76,175,130,0.3); }
-    .btn-success:hover { background: rgba(76,175,130,0.25); }
-    .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.82rem; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+      position: relative; z-index: 1;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 2rem 0 1.5rem;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border-radius: 16px;
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 8px 32px rgba(139,92,246,0.4);
+    }
+
+    header h1 {
+      font-family: 'Noto Serif Hebrew', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, var(--purple-light) 50%, var(--pink) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .tagline {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .tagline strong { color: var(--purple-light); font-weight: 500; }
+
+    .header-divider {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, var(--purple), var(--pink));
+      margin: 1.2rem auto;
+      border-radius: 2px;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover { border-color: rgba(139,92,246,0.2); }
+
+    .card-title {
+      font-family: 'Noto Serif Hebrew', serif;
+      font-size: 1rem;
+      color: var(--purple-light);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ── Auth bar ── */
+    #auth-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 0.9rem 1.25rem;
+    }
+
+    .auth-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .auth-left .icon { font-size: 1.1rem; }
+
+    #auth-user {
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(139,92,246,0.12);
+      border: 1px solid rgba(139,92,246,0.25);
+      border-radius: 20px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.82rem;
+      color: var(--purple-light);
+    }
+
+    .user-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px var(--success);
+      flex-shrink: 0;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(139,92,246,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,92,246,0.4); }
+
+    .btn-secondary {
+      background: var(--surface3);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.9rem;
+      font-size: 0.8rem;
+    }
+    .btn-ghost:hover { color: var(--error); border-color: rgba(244,63,94,0.3); }
+
+    .btn-danger {
+      background: rgba(244,63,94,0.1);
+      color: var(--error);
+      border: 1px solid rgba(244,63,94,0.2);
+    }
+    .btn-danger:hover { background: rgba(244,63,94,0.2); }
+
+    .btn-success {
+      background: rgba(16,185,129,0.1);
+      color: var(--success);
+      border: 1px solid rgba(16,185,129,0.2);
+    }
+    .btn-success:hover { background: rgba(16,185,129,0.2); }
+
+    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
+
+    /* ── Form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
     .form-group.full { grid-column: 1 / -1; }
-    label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
-    input[type="text"], input[type="date"] { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem; color: var(--text); font-family: 'Heebo', sans-serif; font-size: 0.95rem; transition: border-color 0.2s; width: 100%; }
-    input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.1); }
-    input::placeholder { color: var(--text-muted); opacity: 0.5; }
-    .hebrew-date-preview { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem; color: var(--gold-light); font-family: 'Frank Ruhl Libre', serif; font-size: 1rem; min-height: 2.6rem; display: flex; align-items: center; }
-    .form-actions { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; }
-    .message { padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.9rem; margin-top: 1rem; display: none; }
-    .message.success { background: rgba(76,175,130,0.15); border: 1px solid rgba(76,175,130,0.3); color: var(--success); display: block; }
-    .message.error { background: rgba(224,85,85,0.15); border: 1px solid rgba(224,85,85,0.3); color: var(--error); display: block; }
-    .card-title-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
-    .sync-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
+
+    label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
+
+    input[type="text"], input[type="date"] {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      color: var(--text);
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+    }
+
+    input::placeholder { color: var(--text-muted); opacity: 0.4; }
+
+    .hebrew-preview {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      color: var(--gold);
+      font-family: 'Noto Serif Hebrew', serif;
+      font-size: 0.95rem;
+      min-height: 2.4rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 1rem;
+      justify-content: flex-end;
+    }
+
+    /* ── Message ── */
+    .message { padding: 0.6rem 0.9rem; border-radius: 8px; font-size: 0.85rem; margin-top: 0.75rem; display: none; }
+    .message.success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); color: var(--success); display: block; }
+    .message.error { background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.25); color: var(--error); display: block; }
+
+    /* ── Table section ── */
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .sync-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .sync-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); }
     .dot.ok { background: var(--success); box-shadow: 0 0 6px var(--success); }
-    .dot.err { background: var(--error); }
+
     .table-wrapper { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-    th { background: var(--surface3); color: var(--gold-light); font-weight: 500; padding: 0.8rem 1rem; text-align: right; font-family: 'Frank Ruhl Libre', serif; border-bottom: 1px solid var(--border); white-space: nowrap; }
-    td { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(201,168,76,0.08); vertical-align: middle; }
-    tr:hover td { background: rgba(201,168,76,0.04); }
-    .age-badge { display: inline-block; background: rgba(201,168,76,0.15); color: var(--gold-light); border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 0.15rem 0.6rem; font-size: 0.8rem; font-weight: 500; }
-    .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
-    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1rem; }
-    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; max-width: 460px; width: 100%; }
-    .modal h3 { font-family: 'Frank Ruhl Libre', serif; color: var(--gold-light); margin-bottom: 1rem; }
-    .modal p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; }
-    .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; }
-    .spinner { width: 16px; height: 16px; border: 2px solid rgba(201,168,76,0.3); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+
+    th {
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-weight: 500;
+      padding: 0.65rem 0.9rem;
+      text-align: right;
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.7rem 0.9rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(139,92,246,0.04); }
+
+    .name-cell { font-weight: 500; color: var(--text); }
+
+    .age-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(139,92,246,0.12);
+      color: var(--purple-light);
+      border: 1px solid rgba(139,92,246,0.2);
+      border-radius: 20px;
+      padding: 0.15rem 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      min-width: 36px;
+    }
+
+    .heb-date {
+      font-family: 'Noto Serif Hebrew', serif;
+      color: var(--gold);
+      font-size: 0.88rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--text-muted);
+    }
+
+    .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.5; }
+    .empty-state p { font-size: 0.88rem; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      max-width: 420px; width: 100%;
+    }
+
+    .modal h3 {
+      font-family: 'Noto Serif Hebrew', serif;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    .modal p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.88rem; line-height: 1.6; }
+    .modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
+
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(139,92,246,0.3);
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+
     @keyframes spin { to { transform: rotate(360deg); } }
-    @media (max-width: 600px) {
+
+    @media (max-width: 580px) {
       .form-grid { grid-template-columns: 1fr; }
       .form-group.full { grid-column: 1; }
-      th, td { padding: 0.6rem 0.6rem; font-size: 0.8rem; }
+      th, td { padding: 0.55rem 0.6rem; font-size: 0.78rem; }
+      #auth-section { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -104,30 +415,38 @@
 <div class="container">
 
   <header>
-    <span class="header-ornament">✦ ✦ ✦</span>
-    <h1>מנהל ימי הולדת</h1>
-    <p>עברי ולועזי — מסונכרן ליומן Google</p>
-    <div class="divider"></div>
+    <div class="logo">🎂</div>
+    <h1>ניהול ימי הולדת חכם</h1>
+    <div class="header-divider"></div>
+    <p class="tagline">
+      הזן תאריך לידה לועזי אחד — ותקבל אוטומטית את <strong>התאריך העברי המדויק</strong>,
+      חישוב גיל שוטף, וסנכרון חכם ל<strong>יומן Google</strong> — בשני הלוחות.
+    </p>
   </header>
 
-  <!-- Google Auth -->
+  <!-- Auth bar -->
   <div id="auth-section" class="card">
-    <p id="auth-status-text">יש להתחבר לחשבון Google כדי לסנכרן עם יומן Google Calendar.</p>
-    <div id="auth-buttons">
-      <button class="btn btn-primary" onclick="handleAuth()">🔗 התחבר לחשבון Google</button>
+    <div class="auth-left">
+      <span class="icon">🔐</span>
+      <span id="auth-status-text">התחבר לחשבון Google כדי לסנכרן עם יומן Google Calendar</span>
     </div>
-    <div id="auth-user">
-      <div class="sync-status">
-        <span class="dot ok"></span>
-        <span id="auth-user-name"></span>
+    <div>
+      <div id="auth-buttons">
+        <button class="btn btn-primary" onclick="handleAuth()">🔗 התחבר לחשבון Google</button>
       </div>
-      <button class="btn btn-secondary" onclick="handleSignOut()" style="margin-top:0.75rem;">התנתק</button>
+      <div id="auth-user">
+        <div class="user-chip">
+          <span class="user-dot"></span>
+          <span id="auth-user-name"></span>
+        </div>
+        <button class="btn btn-ghost" onclick="handleSignOut()">התנתק</button>
+      </div>
     </div>
   </div>
 
-  <!-- Add Birthday Form -->
+  <!-- Add Form -->
   <div class="card">
-    <div class="card-title">✨ הוספת יום הולדת חדש</div>
+    <div class="card-title">✦ הוספת יום הולדת</div>
     <div class="form-grid">
       <div class="form-group">
         <label for="firstName">שם פרטי</label>
@@ -143,7 +462,7 @@
       </div>
       <div class="form-group full">
         <label>תאריך עברי מחושב</label>
-        <div class="hebrew-date-preview" id="hebrewPreview">— הזן תאריך לועזי —</div>
+        <div class="hebrew-preview" id="hebrewPreview">— הזן תאריך לועזי —</div>
       </div>
     </div>
     <div id="form-message" class="message"></div>
@@ -153,16 +472,16 @@
     </div>
   </div>
 
-  <!-- Birthday List -->
+  <!-- List -->
   <div class="card">
-    <div class="card-title-row">
-      <span class="card-title" style="margin-bottom:0;">📋 רשימת ימי הולדת</span>
-      <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
-        <div class="sync-status">
+    <div class="list-header">
+      <div class="card-title" style="margin-bottom:0;">📋 רשימת ימי הולדת</div>
+      <div class="sync-info">
+        <div class="sync-badge">
           <span class="dot" id="cal-dot"></span>
           <span id="cal-status-text">לא מסונכרן</span>
         </div>
-        <button class="btn btn-success" onclick="syncAllToCalendar()" id="sync-btn">🔄 סנכרן ליומן</button>
+        <button class="btn btn-success btn-sm" onclick="syncAllToCalendar()" id="sync-btn">🔄 סנכרן ליומן</button>
       </div>
     </div>
     <div class="table-wrapper">
@@ -170,18 +489,18 @@
         <thead>
           <tr>
             <th>שם מלא</th>
-            <th>תאריך לידה לועזי</th>
-            <th>גיל לועזי</th>
-            <th>תאריך עברי (מקורי)</th>
+            <th>תאריך לידה</th>
+            <th>גיל</th>
+            <th>תאריך עברי</th>
             <th>גיל עברי</th>
-            <th>פעולות</th>
+            <th></th>
           </tr>
         </thead>
         <tbody id="birthday-list">
           <tr><td colspan="6">
             <div class="empty-state">
-              <div class="icon">🎂</div>
-              <div>טרם נוספו ימי הולדת</div>
+              <div class="empty-icon">🎂</div>
+              <p>טרם נוספו ימי הולדת</p>
             </div>
           </td></tr>
         </tbody>
