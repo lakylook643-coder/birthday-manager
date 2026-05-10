@@ -16,7 +16,6 @@ window.addEventListener('load', () => {
 });
 
 // ── Data: localStorage ─────────────────────────────────────────────────────
-const GITHUB_TOKEN = window.APP_CONFIG?.githubToken || '';
 const GITHUB_OWNER = 'lakylook643-coder';
 const GITHUB_REPO = 'birthday-manager';
 const DATA_FILE = 'data/birthdays.json';
@@ -25,7 +24,7 @@ async function loadData() {
   try {
     const res = await fetch(
       `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
-      { headers: { Authorization: `token ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' } }
+      { headers: { Accept: 'application/vnd.github.v3+json' } }
     );
     if (res.status === 404) { birthdays = []; return; }
     const json = await res.json();
